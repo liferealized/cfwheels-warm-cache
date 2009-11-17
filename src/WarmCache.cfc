@@ -1,6 +1,6 @@
 <cfcomponent output="false">
 
-	<cffunction name="init">
+	<cffunction name="init" output="false" access="public">
 		<cfset this.version = "1.0" />
 		<cfreturn this />
 	</cffunction>
@@ -9,37 +9,37 @@
 		<cfargument name="warmControllerCache" type="boolean" required="false" default="true" />
 		<cfargument name="warmModelCache" type="boolean" required="false" default="true" />
 		<cfscript>
-var local = {
-	  controllerPath =  application.wheels.rootPath & application.wheels.controllerComponentPath
-	, modelPath =  application.wheels.rootPath & application.wheels.modelComponentPath
-};
+			var loc = {
+				  controllerPath =  application.wheels.rootPath & application.wheels.controllerComponentPath
+				, modelPath =  application.wheels.rootPath & application.wheels.modelComponentPath
+			};
 			
 			if (not ListFindNoCase("testing,production,maintenance", application.wheels.environment))
 				return;
 		
 			if (arguments.warmControllerCache) {
 			
-				local.controllers = $directory(action="list", directory=ExpandPath(local.controllerPath), filter="*.cfc", listinfo="name", recurse=false, type="file");
-				local.iEnd = local.controllers.RecordCount;
+				loc.controllers = $directory(action="list", directory=ExpandPath(loc.controllerPath), filter="*.cfc", listinfo="name", recurse=false, type="file");
+				loc.iEnd = loc.controllers.RecordCount;
 				
-				for (local.i=1; local.i lte local.iEnd; local.i++) {
-					local.controllerName = Replace(local.controllers.name[local.i], ".cfc", "", "all");
+				for (loc.i=1; loc.i lte loc.iEnd; loc.i++) {
+					loc.controllerName = Replace(loc.controllers.name[loc.i], ".cfc", "", "all");
 					// get each controller we find into the cache
-					local.controller = $controller(local.controllerName);
+					loc.controller = $controller(loc.controllerName);
 				}
 			}
 			
 			if (arguments.warmModelCache) {
 			
-				local.models = $directory(action="list", directory=ExpandPath(local.modelPath), filter="*.cfc", listinfo="name", recurse=false, type="file");
-				local.iEnd = local.controllers.RecordCount;
+				loc.models = $directory(action="list", directory=ExpandPath(loc.modelPath), filter="*.cfc", listinfo="name", recurse=false, type="file");
+				loc.iEnd = loc.controllers.RecordCount;
 				
-				for (local.i=1; local.i lte local.iEnd; local.i++) {
-					local.modelName = Replace(local.models.name[local.i], ".cfc", "", "all");
-					// get each model we find into the cache
+				for (loc.i=1; loc.i lte loc.iEnd; loc.i++) {
+					loc.modelName = Replace(loc.models.name[loc.i], ".cfc", "", "all");
 					
+					// get each model we find into the cache
 					try {
-						local.model = model(local.modelName);
+						loc.model = model(loc.modelName);
 					} catch (Any e) {
 						// do nothing
 					}
